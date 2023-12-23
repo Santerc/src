@@ -1,0 +1,10 @@
+<launch>
+    <param name="robot_description" command="$(find xacro)/xacro $(find sentry)/urdf/xacro/waking_robot.xacro" />
+    <node pkg="joint_state_publisher" name="joint_state_publisher" type="joint_state_publisher" />
+    <node pkg="robot_state_publisher" name="robot_state_publisher" type="robot_state_publisher" />
+    <include file="$(find rplidar_ros)/launch/rplidar_s2.launch"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sentry)/config/rviz_settings.rviz" />
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
+    <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find sentry)/map/$(arg map)"/> -->
+    <!-- <include file="$(find sentry)/launch/slam.launch"/>  -->
+</launch>

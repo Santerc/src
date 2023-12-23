@@ -1,0 +1,8 @@
+<launch>
+    <!-- Launch Livox Lidar -->
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch"/> 
+    <!-- Launch Fast Lio Localization -->
+    <include file="$(find fast_lio)/launch/mapping_mid360.launch"/> 
+
+
+</launch>

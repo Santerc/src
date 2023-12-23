@@ -1,0 +1,208 @@
+MpcLocalPlannerROS:
+  # odom_topic：机器人的里程计话题名称。
+  odom_topic: odom
+    
+   ## Robot settings
+  robot:
+    type: "simple_car"
+    simple_car:
+      wheelbase: 0.4
+      front_wheel_driving: False
+      max_vel_x: 0.3
+      max_vel_x_backwards: 0.2
+      max_steering_angle: 1.4
+      acc_lim_x: 0.1 # deactive bounds with zero
+      dec_lim_x: 0.1 # deactive bounds with zero
+      max_steering_rate: 0.1 # deactive bounds with zero
+ 
+  ## Footprint model for collision avoidance
+  footprint_model: # types: "point", "circular", "two_circles", "line", "polygon"
+    type: "circular"
+    radius: 0.12 # for type "circular"
+    line_start: [0.0, 0.0] # for type "line"
+    line_end: [0.4, 0.0] # for type "line"
+    front_offset: 0.2 # for type "two_circles"
+    front_radius: 0.2 # for type "two_circles"
+    rear_offset: 0.2 # for type "two_circles"
+    rear_radius: 0.2 # for type "two_circles"
+    vertices: [ [0.25, -0.05], [0.18, -0.05], [0.18, -0.18], [-0.19, -0.18], [-0.25, 0], [-0.19, 0.18], [0.18, 0.18], [0.18, 0.05], [0.25, 0.05] ] # for type "polygon"
+    is_footprint_dynamic: False
+ 
+ 
+  ## Collision avoidance
+  collision_avoidance:
+    min_obstacle_dist: 0.2 # Note, this parameter must be chosen w.r.t. the footprint_model
+    enable_dynamic_obstacles: False
+    force_inclusion_dist: 0.5
+    cutoff_dist: 2.5 
+    include_costmap_obstacles: True
+    costmap_obstacles_behind_robot_dist: 1.0
+    collision_check_no_poses: 5
+    
+ 
+  ## Planning grid 
+  grid:
+    type: "fd_grid"
+    grid_size_ref: 20
+    dt_ref: 0.3
+    xf_fixed: [True, True, True]
+    warm_start: True
+    collocation_method: "forward_differences"
+    cost_integration_method: "left_sum"
+    variable_grid:
+      enable: True  
+      min_dt: 0.0;
+      max_dt: 10.0;
+      grid_adaptation:
+        enable: True
+        dt_hyst_ratio: 0.1
+        min_grid_size: 2
+        max_grid_size: 50
+ 
+  ## Planning options
+  planning:
+    objective:
+      type: "minimum_time" # minimum_time requires grid/variable_grid/enable=True and grid/xf_fixed set properly
+    terminal_cost:
+      type: "none"
+    terminal_constraint:
+      type: "none"
+ 
+  ## Controller options
+  controller:
+    outer_ocp_iterations: 1
+    xy_goal_tolerance: 0.2
+    yaw_goal_tolerance: 0.1
+    global_plan_overwrite_orientation: True
+    global_plan_prune_distance: 1.0
+    allow_init_with_backward_motion: True
+    max_global_plan_lookahead_dist: 1.5 
+    force_reinit_new_goal_dist: 1.0
+    force_reinit_new_goal_angular: 1.57
+    prefer_x_feedback: False
+    publish_ocp_results: False
+    
+  ## Solver settings
+  solver:
+    type: "ipopt"
+    ipopt:
+      iterations: 100
+      max_cpu_time: -1.0
+      ipopt_numeric_options:
+        tol: 1e-4
+      ipopt_string_options:
+        linear_solver: "mumps" 
+        hessian_approximation: "limited-memory" # exact/limited-memory, WARNING 'exact' does currently not work well with the carlike model
+    lsq_lm:
+      iterations: 10
+      weight_init_eq: 2
+      weight_init_ineq: 2
+      weight_init_bounds: 2
+      weight_adapt_factor_eq: 1.5
+      weight_adapt_factor_ineq: 1.5
+      weight_adapt_factor_bounds: 1.5
+      weight_adapt_max_eq: 500
+      weight_adapt_max_ineq: 500
+      weight_adapt_max_bounds: 500
+
+
+
+
+
+# robot：机器人相关设置。
+
+# type：机器人类型，这里是simple_car。
+# simple_car：简单车辆类型的机器人参数。
+# wheelbase：轴距。
+# front_wheel_driving：前轮是否驱动。
+# max_vel_x：前进的最大线速度。
+# max_vel_x_backwards：后退的最大线速度。
+# max_steering_angle：最大转角。
+# acc_lim_x：前进的线性加速度限制。
+# dec_lim_x：前进的线性减速度限制。
+# max_steering_rate：最大转角速率。
+# footprint_model：用于避免碰撞的足迹模型。
+
+# type：足迹模型的类型，可以是point、circular、two_circles、line或polygon。
+# radius：当足迹模型类型为circular时的半径。
+# line_start：当足迹模型类型为line时的起点坐标。
+# line_end：当足迹模型类型为line时的终点坐标。
+# front_offset：当足迹模型类型为two_circles时前圆心偏移量。
+# front_radius：当足迹模型类型为two_circles时前圆半径。
+# rear_offset：当足迹模型类型为two_circles时后圆心偏移量。
+# rear_radius：当足迹模型类型为two_circles时后圆半径。
+# vertices：当足迹模型类型为polygon时的顶点坐标。
+# is_footprint_dynamic：足迹是否是动态的。
+# collision_avoidance：碰撞避免相关设置。
+
+# min_obstacle_dist：障碍物的最小安全距离。注意，此参数必须与足迹模型相匹配。
+# enable_dynamic_obstacles：是否启用动态障碍物。
+# force_inclusion_dist：强制包含距离。
+# cutoff_dist：截断距离。
+# include_costmap_obstacles：是否包括代价地图中的障碍物。
+# costmap_obstacles_behind_robot_dist：机器人后方的代价地图障碍物距离。
+# collision_check_no_poses：碰撞检查的位姿数量。
+# grid：规划网格相关设置。
+
+# type：规划网格的类型，这里是fd_grid。
+# grid_size_ref：参考网格大小。
+# dt_ref：参考时间间隔。
+# xf_fixed：是否固定终点状态。
+# warm_start：是否使用热启动。
+# collocation_method：插值方法，这里是forward_differences。
+# cost_integration_method：成本积分方法，这里是left_sum。
+# variable_grid：可变网格设置。
+# enable：是否启用可变网格。
+# min_dt：最小时间间隔。
+# max_dt：最大时间间隔。
+# grid_adaptation：网格自适应设置。
+# enable：是否启用网格自适应。
+# dt_hyst_ratio：时间间隔滞后比率。
+# min_grid_size：最小网格大小。
+# max_grid_size：最大网格大小。
+# planning：规划选项。
+
+# objective：目标函数设置。
+# type：目标函数类型，这里是minimum_time，表示最小化时间。
+# terminal_cost：终端成本设置。
+# type：终端成本类型，这里是none，表示没有终端成本。
+# terminal_constraint：终端约束设置。
+# type：终端约束类型，这里是none，表示没有终端约束。
+# controller：控制器选项。
+
+# outer_ocp_iterations：外层最优控制迭代次数。
+# xy_goal_tolerance：xy坐标目标容差。
+# yaw_goal_tolerance：偏航角目标容差。
+# global_plan_overwrite_orientation：全局路径是否覆盖机器人当前姿态。
+# global_plan_prune_distance：全局路径修剪距离。
+# allow_init_with_backward_motion：是否允许使用向后运动初始化。
+# max_global_plan_lookahead_dist：全局路径最大预瞄距离。
+# force_reinit_new_goal_dist：强制重新初始化新目标的距离。
+# force_reinit_new_goal_angular：强制重新初始化新目标的角度。
+# prefer_x_feedback：是否优先使用x反馈。
+# publish_ocp_results：是否发布OCP结果。
+# solver：求解器设置。
+
+# type：求解器类型，这里是ipopt。
+# ipopt：Ipopt求解器设置。
+# iterations：迭代次数。
+# max_cpu_time：最大CPU时间。
+# ipopt_numeric_options：Ipopt的数值选项。
+# tol：容差。
+# ipopt_string_options：Ipopt的字符串选项。
+# linear_solver：线性求解器，这里是mumps。
+# hessian_approximation：Hessian矩阵近似方法，这里是limited-memory。
+# lsq_lm：Levenberg-Marquardt方法设置。
+# iterations：迭代次数。
+# weight_init_eq：等式初始权重。
+# weight_init_ineq：不等式初始权重。
+# weight_init_bounds：边界初始权重。
+# weight_adapt_factor_eq：等式权重自适应因子。
+# weight_adapt_factor_ineq：不等式权重自适应因子。
+# weight_adapt_factor_bounds：边界权重自适应因子。
+# weight_adapt_max_eq：等式权重自适应最大值。
+# weight_adapt_max_ineq：不等式权重自适应最大值。
+# weight_adapt_max_bounds：边界权重自适应最大值。
+# ————————————————
+# 版权声明：本文为CSDN博主「慕羽★」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+# 原文链接：https://blog.csdn.net/qq_44339029/article/details/131240951

@@ -1,0 +1,47 @@
+<launch>
+<param name="use_sim_time" value="true"/>
+ <!-- <include file="$(find rplidar_ros)/launch/rplidar_s2.launch"/> -->
+ <!-- <include file="$(find sentry)/launch/load_world.launch"/> -->
+      <!-- <node pkg="tf" type="static_transform_publisher" name="init_to_odom_broadcaster" args="0 0 0 0 0 0 map base_footprint 100"/> -->
+
+      <!-- <node pkg="tf" type="static_transform_publisher" name="odom_to_base_broadcaster" args="0 0 0 0 0 0 body base_link 100"/> -->
+
+      <!-- <node pkg="tf" type="static_transform_publisher" name="base_to_laser_broadcaster" args="0.13 0 -0.2 0 0 0 body laser 100"/> -->
+      <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+      <param name="pub_map_odom_transform" value="true"/>
+      <param name="map_frame" value="map" />
+      <remap from="scan" to="scan"/>
+      <!-- <param name="base_frame" value="body"/> this is the frame of MID360 and FAST_LIO not simulation -->
+      <!-- <param name="odom_frame" value="camera_init"/>this is the frame of MID360 and FAST_LIO not simulation -->
+      <param name="odom_frame" value="odom"/>
+       <param name="base_frame" value="dummy"/>
+      <param name="map_update_interval" value="1.0"/>
+      <param name="maxUrange" value="16.0"/>
+      <param name="sigma" value="0.05"/>
+      <param name="kernelSize" value="1"/>
+      <param name="lstep" value="0.05"/>
+      <param name="astep" value="0.05"/>
+      <param name="iterations" value="5"/>
+      <param name="lsigma" value="0.075"/>
+      <param name="ogain" value="3.0"/>
+      <param name="lskip" value="0"/>
+      <param name="srr" value="0.1"/>
+      <param name="srt" value="0.2"/>
+      <param name="str" value="0.1"/>
+      <param name="stt" value="0.2"/>
+      <param name="linearUpdate" value="1.0"/>
+      <param name="angularUpdate" value="0.5"/>
+      <param name="temporalUpdate" value="3.0"/>
+      <param name="resampleThreshold" value="0.5"/>
+      <param name="particles" value="30"/>
+      <param name="xmin" value="-50.0"/>
+      <param name="ymin" value="-50.0"/>
+      <param name="xmax" value="50.0"/>
+      <param name="ymax" value="50.0"/>
+      <param name="delta" value="0.05"/>
+      <param name="llsamplerange" value="0.01"/>
+      <param name="llsamplestep" value="0.01"/>
+      <param name="lasamplerange" value="0.005"/>
+      <param name="lasamplestep" value="0.005"/>
+    </node>
+</launch>

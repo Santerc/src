@@ -1,0 +1,42 @@
+<launch>
+
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true">
+
+        <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS" /> -->
+        <!-- <rosparam file="$(find sentry)/param/mpc/mpc_local_planner.yaml" command="load" /> -->
+        <!-- <param name="controller_frequency" value="5" />
+        <param name="controller_patiente" value="15.0"/>
+        <param name="clearing_rotation_allowed" value="true" /> -->
+
+        <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <rosparam file="$(find sentry)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find sentry)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find sentry)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find sentry)/param/global_costmap_params.yaml" command="load" /> -->
+        <!-- <rosparam file="$(find sentry)/param/move_base_params.yaml" command="load" /> -->
+        <!-- <rosparam file="$(find sentry)/param/base_local_planner_params.yaml" command="load" /> -->
+
+        <rosparam file="$(find mpc_local_planner_examples)/cfg/diff_drive/costmap_common_params.yaml" command="load" ns="global_costmap" />
+  	 	<rosparam file="$(find mpc_local_planner_examples)/cfg/diff_drive/costmap_common_params.yaml" command="load" ns="local_costmap" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/diff_drive/local_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/diff_drive/global_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/diff_drive/mpc_local_planner_params_quadratic_form.yaml" command="load" />
+        <!-- <rosparam file="$(find mpc_local_planner_examples)/cfg/simple_car/costmap_common_params.yaml" command="load" ns="global_costmap" />
+  	 	<rosparam file="$(find mpc_local_planner_examples)/cfg/simple_car/costmap_common_params.yaml" command="load" ns="local_costmap" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/simple_car/local_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/simple_car/global_costmap_params.yaml" command="load" />
+  		<rosparam file="$(find mpc_local_planner_examples)/cfg/simple_car/mpc_local_planner_params_quadratic_form.yaml" command="load" /> -->
+
+		<param name="base_global_planner" value="global_planner/GlobalPlanner" />
+		<param name="planner_frequency" value="1.0" />
+		<param name="planner_patience" value="5.0" />
+        <!-- <rosparam file="$(find sentry)/param/teb/base_global_planner_params.yaml" command="load" /> -->
+
+		<param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS" />
+		<param name="controller_frequency" value="5.0" />
+		<param name="controller_patience" value="15.0" />
+<!-- 
+                <param name="MpcLocalPlannerROS/controller/publish_ocp_results" value="true" if="$(arg plot)" /> -->
+    </node>
+
+</launch>
